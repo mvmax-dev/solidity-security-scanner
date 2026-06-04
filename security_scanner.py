@@ -755,6 +755,29 @@ def scan_contract(contract_address: str) -> None:
         "slither_findings": slither_findings_for_packager,
         "scan_timestamp": datetime.now(timezone.utc).isoformat(),
     }
+    
+    # --- WEB3 SAAS PAYWALL LOGIC ---
+    try:
+        from paywall.verify_subscription import verify_subscription
+        wallet = os.environ.get("WALLET_ADDRESS", "")
+        rpc = os.environ.get("RPC_URL", "https://mainnet.base.org")
+        has_pro = verify_subscription(wallet, rpc)
+    except Exception:
+        has_pro = False
+
+    if has_pro:
+        output["ai_validation"] = "✅ PRO feature unlocked! Running AI Validation..."
+        try:
+            from vulnerability_validator import VulnerabilityValidator
+            validator = VulnerabilityValidator(workspace)
+            val_res = validator.validate_contract(contract_address)
+            output["ai_validation_results"] = val_res
+        except Exception as e:
+            output["ai_validation_error"] = str(e)
+    else:
+        output["ai_validation"] = "🔒 AI Validation is locked. Pay 50 USDC on Base Network to unlock Deep AI Audits."
+        output["payment_link"] = "https://pay.mvmax-dev.org"
+        output["wallet_required"] = "Set WALLET_ADDRESS in Action inputs to verify your subscription."
     sys.stdout.write(json.dumps(output) + "\n")
     sys.stdout.flush()
 

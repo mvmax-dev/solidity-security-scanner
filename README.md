@@ -1,48 +1,55 @@
-# 🛡️ Solidity Security Scanner (AST-Powered)
+# 🛡️ Solidity Security Scanner PRO (GitHub Action)
 
 [![Security Scanner CI](https://github.com/mvmax-dev/solidity-security-scanner/actions/workflows/python-app.yml/badge.svg)](https://github.com/mvmax-dev/solidity-security-scanner/actions/workflows/python-app.yml)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/release/python-3100/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+[![Marketplace](https://img.shields.io/badge/GitHub-Marketplace-blue)](https://github.com/marketplace)
+[![Web3 Paywall](https://img.shields.io/badge/Payment-Crypto_USDC-green)](#pro-version--web3-paywall)
 
-An advanced, open-source static analysis and vulnerability detection engine for Ethereum and Base smart contracts. Built for Web3 security researchers, auditors, and protocol developers to proactively identify and remediate critical attack vectors.
+**Automated Smart Contract Audit**, **DeFi Security**, **Web3 GitHub Action**, **Solidity Auditor**, **Smart Contract Security Bot**.
 
-## 🌟 Key Features
-- **AST-Based Analysis**: Deep structural inspection of Solidity code rather than simple regex matching.
-- **False-Positive Suppression**: Advanced validation pipelines to filter out noise and focus on real threats.
-- **Automated Bounty Integration**: Seamlessly hooks into Immunefi, CodeHawks, and Sherlock for threat intel.
-- **Multi-Vector Detection**: Reentrancy, Oracle Manipulation, Flash Loan vectors, and Unprotected Self-Destructs.
+An advanced, open-source static analysis and AI vulnerability detection engine for Ethereum and Base smart contracts. Built for Web3 security researchers, auditors, and protocol developers. 
 
-## 🚀 Quick Start
+Now available as a seamless **GitHub Action** to automatically secure your Pull Requests!
 
-### Prerequisites
-- Python 3.10+
-- Etherscan/Basescan API Keys (for live contract fetching)
+## 🚀 Quick Start (GitHub Action)
 
-### Installation
-```bash
-git clone https://github.com/mvmax-dev/solidity-security-scanner.git
-cd solidity-security-scanner
-pip install -r requirements.txt
+Add the following workflow to your repository to automatically scan your smart contracts on every Pull Request:
+
+```yaml
+name: "Web3 Security Audit"
+on: [pull_request]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Solidity Security Scanner PRO
+        uses: mvmax-dev/solidity-security-scanner@main
+        with:
+          # Optional: Specify your wallet address to unlock AI Validation PRO features
+          wallet_address: "0xYourWalletAddress"
 ```
 
-### Usage
-Run the scanner against a live contract on Base:
-```bash
-python security_scanner.py --address 0xYourContractAddress --chain base
-```
+## 💎 PRO Version & Web3 Paywall
+
+The basic `Slither` structural analysis is 100% free. 
+However, **AI Vulnerability Validation** (which suppresses false positives and detects deep logical flaws) is secured behind a decentralized Web3 Paywall.
+
+**To Unlock PRO:**
+1. Send **50 USDC** on the **Base Network** to `0x0000000000000000000000000000000000000000` (Replace with your actual payment address).
+2. Add your wallet address to the `wallet_address` input in your GitHub workflow.
+3. The Action will query the blockchain via RPC. Once payment is verified, the AI Validator automatically unlocks!
 
 ## 🏗️ Architecture
-The system operates in a 3-phase pipeline:
-1. **Ingestion**: `codebase_analyzer.py` fetches and indexes verified smart contract code.
-2. **Detection**: `security_scanner.py` applies high-fidelity detection rules.
-3. **Validation**: `vulnerability_validator.py` cross-references findings to suppress false positives.
 
-## 🤝 Contributing
-We welcome contributions from the Web3 security community! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details on how to submit Pull Requests.
+1. **Ingestion**: Fetches and indexes verified smart contract code.
+2. **Detection**: Applies high-fidelity detection rules (Reentrancy, MEV vectors, Flash Loans).
+3. **Web3 Paywall**: Verifies your subscription via Base RPC.
+4. **AI Validation**: PRO feature that cross-references findings to suppress false positives.
+
+## 🤝 Contributing & Security
+
+Please see our [Contributing Guidelines](CONTRIBUTING.md) and [Security Policy](SECURITY.md).
 
 ## 📜 License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-*Developed by Maxwell Voss | Sovereign Security Intelligence*
+MIT License - see the [LICENSE](LICENSE) file for details.

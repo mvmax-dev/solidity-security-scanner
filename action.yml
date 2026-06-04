@@ -1,0 +1,28 @@
+name: 'Automated Smart Contract Auditor Pro'
+description: 'AI-powered smart contract scanner with Web3 validation logic to secure DeFi/Web3 PRs.'
+author: 'Maxwell VOSS'
+branding:
+  icon: 'shield'
+  color: 'blue'
+
+inputs:
+  contract_address:
+    description: 'The smart contract address or file to scan (optional, if omitted it scans the whole repo)'
+    required: false
+    default: ''
+  wallet_address:
+    description: 'Your Web3 wallet address to unlock AI Validation Pro features via crypto payment'
+    required: false
+    default: ''
+  rpc_url:
+    description: 'RPC URL for Base or Polygon to verify the subscription on-chain'
+    required: false
+    default: 'https://mainnet.base.org'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.contract_address }}
+    - ${{ inputs.wallet_address }}
+    - ${{ inputs.rpc_url }}
