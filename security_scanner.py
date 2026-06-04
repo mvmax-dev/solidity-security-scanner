@@ -638,6 +638,20 @@ def scan_contract(contract_address: str, workspace_override: str = None) -> None
             if not os.path.exists(workspace):
                 workspace = os.getcwd()
 
+    # --- SOLANA DETECTION ---
+    try:
+        from solana_scanner import SolanaScanner
+        solana_scanner = SolanaScanner(workspace)
+        if solana_scanner.is_solana:
+            _log("INFO", "Solana/Rust project detected! Routing to Solana Scanner engine...")
+            sol_res = solana_scanner.scan()
+            sys.stdout.write(json.dumps(sol_res) + "\\n")
+            sys.stdout.flush()
+            return
+    except Exception as e:
+        _log("ERROR", f"Solana scanning failed: {e}")
+
+
     _log("INFO", f"Security Scanner v1.0 (Slither Hybrid) — {datetime.now(timezone.utc).isoformat()}")
     _log("INFO", f"Target: {contract_address}")
 
@@ -778,6 +792,16 @@ def scan_contract(contract_address: str, workspace_override: str = None) -> None
         except Exception as e:
             output["ai_validation_error"] = str(e)
             
+        # --- FUZZ TESTING ENGINE ---
+        try:
+            from fuzz_engine import FuzzEngine
+            fuzzer = FuzzEngine(workspace)
+            if fuzzer.has_foundry:
+                fuzz_res = fuzzer.run_fuzz_tests()
+                output["fuzz_testing"] = fuzz_res
+        except Exception as e:
+            output["fuzz_testing_error"] = str(e)
+            
         # --- GAS OPTIMIZER ENGINE ---
         try:
             from gas_optimizer import GasOptimizer
@@ -830,6 +854,44 @@ def scan_contract(contract_address: str, workspace_override: str = None) -> None
                     f.write(f"> Send **50 USDC** on the Base or Ethereum network to `0x9758AdAe878bD4EA0d0aa24408c56D7d4aEC29a5` and add your wallet address to this Action's inputs.\n")
         except Exception as e:
             _log("ERROR", f"Failed to write GitHub Step Summary: {e}")
+
+    # --- INLINE PR COMMENTS (GITHUB API) ---
+    try:
+        from github_commenter import GitHubCommenter
+        commenter = GitHubCommenter()
+        
+        # Post inline comments for high & critical findings
+        posted_comments = 0
+        
+        # Heuristic findings
+        for finding in heuristic_findings:
+            if finding.severity in ["Critical", "High"] and finding.line_number > 0 and posted_comments < 15:
+                body = f"**[{finding.severity}] {finding.title}**\\n{finding.description}"
+                commenter.post_inline_comment(finding.file_path, finding.line_number, body)
+                posted_comments += 1
+                
+        # Slither findings
+        for sf in slither_raw:
+            if sf.mapped_severity in ["Critical", "High"] and sf.lines and posted_comments < 15:
+                # Use the first line of the first element
+                line_no = sf.lines[0]
+                if line_no > 0:
+                    body = f"**[{sf.mapped_severity}] {sf.check_name}**\\n{sf.description}"
+                    # Slither file path is usually relative
+                    commenter.post_inline_comment(sf.file_path, line_no, body)
+                    posted_comments += 1
+                    
+        # General summary comment
+        if total_findings > 0:
+            summary_body = f"The Web3 AI Scanner found **{total_findings}** issues.\\n"
+            summary_body += f"- Critical: {merged_counts.get('Critical', 0)}\\n"
+            summary_body += f"- High: {merged_counts.get('High', 0)}\\n"
+            if not has_pro:
+                summary_body += "\\n🔒 **Unlock AI False-Positive Suppression & Gas Optimizer** by sending 50 USDC to `0x9758AdAe878bD4EA0d0aa24408c56D7d4aEC29a5`."
+            commenter.post_general_comment(summary_body)
+            
+    except Exception as e:
+        _log("ERROR", f"Failed to execute GitHub PR Commenter: {e}")
 
 if __name__ == "__main__":
     import argparse

@@ -18,6 +18,19 @@ RUN solc-select install 0.8.20 && \
     solc-select install 0.8.24 && \
     solc-select use 0.8.24
 
+# Install Foundry
+ENV FOUNDRY_DIR=/opt/foundry
+RUN curl -L https://foundry.paradigm.xyz | bash && \
+    /root/.foundry/bin/foundryup -b master && \
+    cp /root/.foundry/bin/* /usr/local/bin/
+
+# Install Rust for Solana/Anchor support
+ENV RUSTUP_HOME=/usr/local/rustup \
+    CARGO_HOME=/usr/local/cargo \
+    PATH=/usr/local/cargo/bin:$PATH
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
+    cargo install cargo-audit
+
 # Copy the scanner code
 COPY . /app
 WORKDIR /app

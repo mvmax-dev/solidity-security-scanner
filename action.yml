@@ -18,6 +18,10 @@ inputs:
     description: 'RPC URL for Base or Polygon to verify the subscription on-chain'
     required: false
     default: 'https://mainnet.base.org'
+  github_token:
+    description: 'GitHub token for inline PR comments'
+    required: false
+    default: ${{ github.token }}
 
 runs:
   using: 'docker'
@@ -26,3 +30,4 @@ runs:
     - ${{ inputs.contract_address }}
     - ${{ inputs.wallet_address }}
     - ${{ inputs.rpc_url }}
+    - ${{ inputs.github_token }}
