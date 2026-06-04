@@ -48,7 +48,7 @@ class GitHubCommenter:
         }
         
         payload = {
-            "body": f"🛡️ **Solidity Security Scanner PRO**\\n\\n{body}",
+            "body": f"🛡️ **Solidity Security Scanner PRO**\n\n{body}",
             "commit_id": self.commit_sha,
             "path": file_path,
             "line": line_number,
@@ -75,7 +75,7 @@ class GitHubCommenter:
         }
         
         payload = {
-            "body": f"🛡️ **Solidity Security Scanner PRO Report**\\n\\n{body}"
+            "body": f"🛡️ **Solidity Security Scanner PRO Report**\n\n{body}"
         }
 
         try:

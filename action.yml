@@ -2,8 +2,8 @@ name: 'Automated Smart Contract Auditor Pro'
 description: 'AI-powered smart contract scanner with Web3 validation logic to secure DeFi/Web3 PRs.'
 author: 'Maxwell VOSS'
 branding:
-  icon: 'shield'
-  color: 'blue'
+  icon: 'zap'
+  color: 'purple'
 
 inputs:
   contract_address:

@@ -54,7 +54,7 @@ class SolanaScanner:
                         findings.append({
                             "issue": "Potential Missing Signer Check",
                             "severity": "Critical",
-                            "file": file_path.replace(self.workspace, "").lstrip("/\\\\"),
+                            "file": os.path.relpath(file_path, self.workspace),
                             "details": "Found AccountInfo usage without explicit is_signer validation."
                         })
                         
