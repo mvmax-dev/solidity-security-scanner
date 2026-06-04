@@ -32,7 +32,11 @@ for _candidate in [os.environ.get("OPENCLAW_WORKSPACE", ""), os.path.expanduser(
     if _candidate and os.path.isdir(_candidate) and _candidate not in sys.path:
         sys.path.insert(0, _candidate)
         break
-from lib.anti_hallucination import _log, no_dry_run
+try:
+    from lib.anti_hallucination import _log, no_dry_run
+except ImportError:
+    def _log(tag, msg): print(f"[{tag}] {msg}")
+    def no_dry_run(func): return func
 
 
 # ──────────────────────────────────────────────
@@ -623,8 +627,13 @@ def scan_contract(contract_address: str) -> None:
     """
     start_time = time.monotonic()
 
-    from lib.workspace import resolve_workspace
-    workspace = resolve_workspace()
+    try:
+        from lib.workspace import resolve_workspace
+        workspace = resolve_workspace()
+    except ImportError:
+        workspace = os.environ.get("OPENCLAW_WORKSPACE") or os.path.expanduser("~/.openclaw/workspace")
+        if not os.path.exists(workspace):
+            workspace = os.getcwd()
 
     _log("INFO", f"Security Scanner v1.0 (Slither Hybrid) — {datetime.now(timezone.utc).isoformat()}")
     _log("INFO", f"Target: {contract_address}")
