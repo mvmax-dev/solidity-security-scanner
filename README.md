@@ -16,28 +16,34 @@
 
 ## 🚀 Welcome to the Future of Web3 Security
 
-An advanced, open-source static analysis and **AI-powered vulnerability detection engine** specifically designed for Ethereum and Base smart contracts. Built for Web3 security researchers, DeFi auditors, and protocol developers to proactively identify and remediate critical attack vectors.
+An advanced, open-source static analysis and **AI-powered vulnerability detection engine** specifically designed for Ethereum, Base, and Solana smart contracts. Built for Web3 security researchers, DeFi auditors, and protocol developers to proactively identify and remediate critical attack vectors.
+
+**🔥 Time-to-First-Scan: < 60 seconds.** From installation to identifying your first critical vulnerability in under a minute.
 
 Now available as a **Zero-Friction GitHub Action**. Automatically secure every Pull Request before it hits production!
+*(Keywords: `reentrancy-scanner`, `flash-loan-defense`, `solana-cpi-security`, `foundry-fuzzing`)*
 
 ---
 
-## ⚡ Features & Tiers
+## ⚡ Features & Tiers (Hybrid Billing)
 
-| Feature | 🆓 Free Tier (Slither) | 💎 PRO Tier (AI & Gas) |
-|---------|:---:|:---:|
-| **AST-Based Structural Analysis** | ✅ | ✅ |
-| **Pull Request PR Comments** | ✅ | ✅ |
-| **Deep AI Logical Flaw Detection** | ❌ | ✅ |
-| **False-Positive Suppression (99% Accuracy)**| ❌ | ✅ |
-| **AST Gas Optimization Engine** | ❌ | ✅ |
-| **Superfluid Continuous Subscriptions** | ❌ | ✅ |
+| Feature | 🆓 Free Tier (Slither) | 💎 PRO Tier (Web3 Indie) | 🏢 Enterprise Tier (B2B) |
+|---------|:---:|:---:|:---:|
+| **AST-Based Structural Analysis** | ✅ | ✅ | ✅ |
+| **Pull Request PR Comments** | ✅ | ✅ | ✅ |
+| **Foundry Fuzz Testing** | ✅ | ✅ | ✅ |
+| **Solana / Rust Native Support** | ✅ | ✅ | ✅ |
+| **Deep AI Logical Flaw Detection** | ❌ | ✅ | ✅ |
+| **False-Positive Suppression (99%)**| ❌ | ✅ | ✅ |
+| **AST Gas Optimization Engine** | ❌ | ✅ | ✅ |
+| **Payment Method** | Free | 50 USDC (Crypto) | Fiat / Stripe |
 
 ---
 
 ## 🚀 Quick Start (Installation)
 
-Add the following workflow to your repository (`.github/workflows/audit.yml`):
+Add the following workflow to your repository (`.github/workflows/audit.yml`). 
+> **Performance Tip:** We highly recommend caching the Docker layers to bypass Rust/Foundry compilation overhead on stateless runners, reducing scan times from 5 minutes to 30 seconds!
 
 ```yaml
 name: "Web3 Security Audit & Gas Optimization"
@@ -48,33 +54,45 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      
+      # Recommended: Cache Docker layers for blazing fast CI/CD
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
       - name: Run Solidity Security Scanner & Optimizer PRO
         uses: mvmax-dev/solidity-security-scanner@main
         with:
-          # Optional: Specify your wallet address to unlock AI & Gas PRO features!
+          # Web3 Indie License (Crypto)
           wallet_address: "0xYourWalletAddress"
+          # OR Enterprise License (Fiat)
+          enterprise_key: ${{ secrets.SCANNER_ENTERPRISE_KEY }}
+          # Required for PR Bot Comments
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           
         env:
-          # Required for PRO verification
           ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
           BASESCAN_API_KEY: ${{ secrets.BASESCAN_API_KEY }}
 ```
 
 ---
 
-## 💎 PRO Version & Web3 Paywall (How to Upgrade)
+## 💎 PRO Version: Hybrid SaaS Paywall
 
-The basic structural analysis is 100% free forever. 
-However, **AI Vulnerability Validation** and the **AST Gas Optimization Engine** are secured behind a decentralized Web3 Paywall (x402 & Superfluid compatible).
+We offer frictionless billing for both Indie Web3 Hackers and Traditional Web2 Enterprises.
 
-**To Unlock PRO (30-Day Subscription):**
-1. Send exactly **50 USDC** on the **Ethereum Mainnet** or **Base Network** to the official Scanner Treasury:
-   👉 `0x9758AdAe878bD4EA0d0aa24408c56D7d4aEC29a5`
-   *(Superfluid continuous streams of USDCx to this address are also automatically detected!)*
-2. Add the wallet address you sent the funds from to the `wallet_address` input in your GitHub workflow.
-3. The Action will securely query the blockchain. Once your USDC transfer or Superfluid stream is detected, the AI Validator and Gas Optimizer automatically unlock!
+**Option A: Web3 Indie (Decentralized Crypto Paywall)**
+1. Send exactly **50 USDC** on the **Ethereum Mainnet** or **Base Network** to the official Scanner Treasury: `0x9758AdAe878bD4EA0d0aa24408c56D7d4aEC29a5`
+2. Add your wallet address to the `wallet_address` input in your GitHub workflow.
 
-*No credit cards, no sign-ups, just pure Web3 automation.*
+**Option B: Enterprise B2B (Stripe Subscription)**
+For corporate finance departments that require fiat billing, invoicing, and auto-renewals.
+1. Subscribe via our Stripe Portal (Coming Soon to the Dashboard).
+2. Add your license key to GitHub Secrets and pass it to the `enterprise_key` input.
 
 ---
 

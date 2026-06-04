@@ -773,14 +773,27 @@ def scan_contract(contract_address: str, workspace_override: str = None) -> None
         "scan_timestamp": datetime.now(timezone.utc).isoformat(),
     }
     
-    # --- WEB3 SAAS PAYWALL LOGIC ---
-    try:
-        from paywall.verify_subscription import verify_subscription
-        wallet = os.environ.get("WALLET_ADDRESS", "")
-        rpc = os.environ.get("RPC_URL", "https://mainnet.base.org")
-        has_pro = verify_subscription(wallet, rpc)
-    except Exception:
-        has_pro = False
+    # --- HYBRID SAAS PAYWALL LOGIC (Web3 + Stripe/Enterprise) ---
+    has_pro = False
+    enterprise_key = os.environ.get("ENTERPRISE_KEY", "").strip()
+    
+    if enterprise_key:
+        # In a real app, this would validate against a backend API (like Stripe or a license server)
+        # For this prototype, any non-empty key beginning with 'ent_' unlocks PRO
+        if enterprise_key.startswith("ent_"):
+            has_pro = True
+            output["billing_tier"] = "Enterprise (Fiat/Stripe)"
+    
+    if not has_pro:
+        try:
+            from paywall.verify_subscription import verify_subscription
+            wallet = os.environ.get("WALLET_ADDRESS", "")
+            rpc = os.environ.get("RPC_URL", "https://mainnet.base.org")
+            has_pro = verify_subscription(wallet, rpc)
+            if has_pro:
+                output["billing_tier"] = "Web3 Indie (USDC)"
+        except Exception:
+            has_pro = False
 
     if has_pro:
         output["ai_validation"] = "✅ PRO feature unlocked! Running AI Validation & Gas Optimizer..."
