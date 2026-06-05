@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@theme {
+  --color-neon-purple: #9d4edd;
+  --color-neon-green: #39ff14;
+  --color-dark-bg: #0a0a0a;
+  --color-glass-bg: rgba(255, 255, 255, 0.05);
+  --color-glass-border: rgba(255, 255, 255, 0.1);
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: rgba(20, 20, 20, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.glow-text-purple {
+  text-shadow: 0 0 10px rgba(157, 78, 221, 0.7);
+}
+
+.glow-text-green {
+  text-shadow: 0 0 10px rgba(57, 255, 20, 0.7);
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #9d4edd, #00f5d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Animations */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 15px rgba(157, 78, 221, 0.4); }
+  50% { box-shadow: 0 0 30px rgba(157, 78, 221, 0.8); }
+}
+
+.animate-glow {
+  animation: pulse-glow 3s infinite;
+}
+
+/* Base Terminal Styling */
+.terminal-window {
+  background: #000;
+  border: 1px solid #333;
+  border-radius: 8px;
+  font-family: 'Courier New', Courier, monospace;
+}
